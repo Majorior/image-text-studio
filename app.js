@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
   downloadBtn.addEventListener('click', () => {
     if (!canvas) return;
     const link = document.createElement('a');
-    link.download = 'image-text-studio.png';
+    link.download = 'mememore.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   });
