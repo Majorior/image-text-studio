@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Text Studio - Custom Meme & Text Overlay Generator</title>
+  <meta name="description" content="Add custom top and bottom text to your images with live preview and instant PNG download." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Comic+Neue:wght@700&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@800;900&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+            <path d="M7 7h.01"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>Text<span class="highlight">Overlay</span> Studio</h1>
+          <p class="subtitle">Upload images, add stylized top & bottom text, and export high-res PNGs</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge"><span class="dot"></span> Client-Side Only</span>
+        <span class="badge accent">PNG Export</span>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Left Column: Canvas Preview -->
+      <section class="preview-section">
+        <div class="card preview-card">
+          <div class="card-header">
+            <h2>Live Preview</h2>
+            <span class="dimensions-badge" id="canvasDimensions">1080 × 1080 px</span>
+          </div>
+          
+          <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="imageCanvas"></canvas>
+            <div id="dropZoneOverlay" class="drop-zone-overlay">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <p>Drop image here to upload</p>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <button id="downloadBtn" class="btn btn-primary btn-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download PNG
+            </button>
+            
+            <button id="resetBtn" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              Reset Text
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Controls -->
+      <section class="controls-section">
+        <!-- Image Upload & Presets -->
+        <div class="card control-card">
+          <div class="card-header">
+            <h3>1. Select Image</h3>
+          </div>
+          
+          <div class="file-upload-container">
+            <input type="file" id="imageInput" accept="image/*" class="file-input" />
+            <label for="imageInput" class="file-upload-label" id="fileDropZone">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <div class="upload-text">
+                <span class="primary-text">Click to choose image</span>
+                <span class="secondary-text">or drag and drop PNG, JPG, WebP</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="presets-wrapper">
+            <span class="presets-label">Or pick a sample template:</span>
+            <div class="preset-buttons">
+              <button class="preset-btn active" data-preset="gradient">Neon Gradient</button>
+              <button class="preset-btn" data-preset="cat">Cool Cat</button>
+              <button class="preset-btn" data-preset="cyberpunk">Cyber City</button>
+              <button class="preset-btn" data-preset="doge">Doge Vibe</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Inputs -->
+        <div class="card control-card">
+          <div class="card-header">
+            <h3>2. Text Overlay</h3>
+          </div>
+
+          <!-- Top Text Group -->
+          <div class="form-group">
+            <label for="topTextInput" class="form-label">
+              <span>Top Text</span>
+              <span class="label-hint">Appears at top</span>
+            </label>
+            <div class="input-with-color">
+              <input type="text" id="topTextInput" class="text-input" placeholder="Enter top text..." value="ONE DOES NOT SIMPLY" />
+              <div class="color-picker-wrapper" title="Top Text Color">
+                <input type="color" id="topTextColorInput" value="#FFFFFF" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Text Group -->
+          <div class="form-group">
+            <label for="bottomTextInput" class="form-label">
+              <span>Bottom Text</span>
+              <span class="label-hint">Appears at bottom</span>
+            </label>
+            <div class="input-with-color">
+              <input type="text" id="bottomTextInput" class="text-input" placeholder="Enter bottom text..." value="BUILD A WEB APP WITHOUT CSS" />
+              <div class="color-picker-wrapper" title="Bottom Text Color">
+                <input type="color" id="bottomTextColorInput" value="#FFFFFF" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography & Customization -->
+        <div class="card control-card">
+          <div class="card-header">
+            <h3>3. Typography & Styling</h3>
+          </div>
+
+          <div class="grid-2col">
+            <!-- Font Family -->
+            <div class="form-group">
+              <label for="fontFamilySelect" class="form-label">Font Style</label>
+              <select id="fontFamilySelect" class="select-input">
+                <option value="Impact, sans-serif" selected>Classic Impact (Meme)</option>
+                <option value="'Montserrat', sans-serif">Montserrat Black</option>
+                <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                <option value="'Anton', sans-serif">Anton Bold</option>
+                <option value="'Outfit', sans-serif">Outfit Modern</option>
+                <option value="'Comic Neue', cursive">Comic Sans Vibe</option>
+                <option value="Georgia, serif">Georgia Serif</option>
+              </select>
+            </div>
+
+            <!-- Text Align -->
+            <div class="form-group">
+              <label for="textAlignSelect" class="form-label">Alignment</label>
+              <select id="textAlignSelect" class="select-input">
+                <option value="center" selected>Center</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Font Size Slider -->
+          <div class="form-group">
+            <div class="slider-label-row">
+              <label for="fontSizeSlider" class="form-label">Font Size</label>
+              <span id="fontSizeVal" class="slider-val">48px</span>
+            </div>
+            <input type="range" id="fontSizeSlider" min="20" max="120" value="48" class="range-slider" />
+          </div>
+
+          <!-- Stroke / Outline Width Slider -->
+          <div class="form-group">
+            <div class="slider-label-row">
+              <label for="strokeWidthSlider" class="form-label">Outline Width</label>
+              <span id="strokeWidthVal" class="slider-val">4px</span>
+            </div>
+            <div class="input-with-color">
+              <input type="range" id="strokeWidthSlider" min="0" max="12" value="4" class="range-slider" />
+              <div class="color-picker-wrapper" title="Outline Color">
+                <input type="color" id="strokeColorInput" value="#000000" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Toggles -->
+          <div class="toggles-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="uppercaseToggle" checked />
+              <span class="custom-checkbox"></span>
+              ALL CAPS
+            </label>
+            
+            <label class="checkbox-label">
+              <input type="checkbox" id="textShadowToggle" checked />
+              <span class="custom-checkbox"></span>
+              Drop Shadow
+            </label>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Single-Page Image Text Studio • Built with HTML5 Canvas, Vanilla CSS & JS</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
